@@ -28,9 +28,6 @@ app.post('/', function(req, res) {
     let name = req_body.user_name;
     let text = req_body.text;
 
-    // レスポンスするデータを格納する
-    let data = {};
-
     // 会員登録されているか確認する
 
 
@@ -42,26 +39,29 @@ app.post('/', function(req, res) {
 
     db.sqlQuery(conn, sql, conditions, function(results) {
 
+        // レスポンスするデータを格納する
+        let res_data = {};
+
         let promise = new Promise(function(resolve, reject) {
 
             if (Object.keys(results).length === 0) {
                 console.log("not used");
 
                 stage.notUsed(req_body, function(data) {
-                    this.data = data;
+                    res_data = data;
                     resolve();
                 });
             } else {
-
                 // 同じ人が/stageを使った場合
                 if (results[0].name == name) {
 
                     stage.used(req_id, function(data) {
-                        this.data = data;
+                        res_data = data;
                         resolve();
                     });
 
                 } else {
+                    console.log("already used");
                     data = {
                         "response_type": "in_channel",
                         "text": results[0].name + "さんが利用しています。",
@@ -74,9 +74,12 @@ app.post('/', function(req, res) {
             }
         });
 
-        promise.then(function(result) {
-            res.json(data);
+        promise.then(function() {
+            res.json(res_data);
+            // res.json(res_data);
         });
+
+        process.on('unhandledRejection', console.dir);
 
         promise.catch(function(err){
             console.log("index.js");

@@ -36,7 +36,7 @@ var Database = function() {
                 timeout: 40000,
                 values: conditions
             }, function(err, results, fields) {
-                console.log("database.js");
+                console.log(results);
                 if (err) throw err;
                 callback(results);
             });

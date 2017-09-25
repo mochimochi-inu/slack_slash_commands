@@ -16,7 +16,6 @@ var Stage = function() {
                         reject();
                     }
                     stage_dao.delete(conn, user_id, function() {
-                        conn.commit(conn);
                         this.data = {
                             "response_type": "in_channel",
                             "text": "ステージの利用終了しました"
@@ -29,6 +28,7 @@ var Stage = function() {
 
             promise.then(function() {
                 console.log("stage.js");
+                conn.commit(conn);
                 callback(this.data);
             });
 

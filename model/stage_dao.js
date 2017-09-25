@@ -1,6 +1,5 @@
 const async = require('async');
 const db = require('./../config/database')();
-// let conn = db.conn
 
 var StageDAO = function() {
     let sql;
@@ -44,8 +43,8 @@ var StageDAO = function() {
                 });
         },
         delete : function(conn, user_id, callback){
-            sql = "DELETE a, b FROM users a JOIN stage_reservation b ON a.id = b.user_id WHERE a.id = ?";
-            conditions = [ user_id ];
+            sql = "DELETE a, b FROM users a JOIN stage_reservation b ON a.id = b.user_id WHERE ?? = ?";
+            conditions = ["a.id", user_id ];
 
             db.sqlQuery(conn, sql, conditions, function(results){
                 callback();
